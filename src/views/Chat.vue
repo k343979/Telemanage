@@ -1,8 +1,10 @@
 <template>
-  <div id="Chat">
-    <ChatBoard/>
-    <ChatForm/>
-  </div>
+  <v-app>
+    <v-container>
+      <ChatForm/>
+      <ChatBoard/>
+    </v-container>
+  </v-app>
 </template>
 
 <script>

@@ -22,7 +22,7 @@
             <textarea class="inputs" name="comment" v-model="content"></textarea>
           </div>
           <div class="btn-area" @click="closeModal">
-            <button @click="send" value="投稿">投稿</button>
+            <button @click="create" value="投稿">投稿</button>
           </div>
         </div>
         <button @click="closeModal">キャンセル</button>
@@ -48,14 +48,18 @@ export default {
     openModal() {
       this.show = true;
     },
-    send() {
-      this.$store.commit('addTask', {
+    create() {
+      let task = {
         name: this.name,
         taskStatus: this.taskStatus,
         content: this.content
-      })
+      };
+      this.$store.dispatch("addTask", task);
     },
     closeModal() {
+      this.name= "",
+      this.taskStatus= "undone",
+      this.content= "",
       this.show = false;
     }
   }
@@ -65,7 +69,7 @@ export default {
 <style scoped>
 #Side {
   width: 210px;
-  height: 100vh;
+  padding-bottom: 20px;
   background-color: #2A005F;
 }
 
@@ -139,6 +143,13 @@ a:hover {
   margin-bottom: 25px;
 }
 
+.item input {
+  height: 30px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+  border-radius: 5px;
+}
+
 .item [type="text"] {
   width: 350px;
   height: 20px;
@@ -148,7 +159,7 @@ a:hover {
   float: left;
   margin-top: 5px;
   margin-right: 10px;
-  width: 80px;
+  width: 100px;
   border-left: solid 3px #2A005F;
   padding-left: 10px;
 }
@@ -157,6 +168,10 @@ a:hover {
   padding-left: 40px;
   float: left;
   width: 360px;
+}
+
+.inputs label {
+  padding-left: 10px;
 }
 
 .inputs [for="undone"] {
@@ -172,7 +187,7 @@ textarea {
   border: solid 1px #aaaaaa;
   border-radius: 5px;
   padding: 10px;
-  margin-left: 80px;
+  margin-left: 70px;
   margin-bottom: 10px;
   height: 150px;
   font-size: 15px;
@@ -187,6 +202,7 @@ textarea {
   margin: 0;
   color: #ffffff;
   background-color: #e0505c;
+  border: 1px solid #777777;
 }
 
 button {
@@ -194,6 +210,7 @@ button {
   margin: 20px;
   background-color: #c4c4c4;
   color: #ffffff;
+  border: 1px solid #777777;
   cursor: pointer;
 }
 </style>

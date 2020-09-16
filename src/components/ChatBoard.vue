@@ -2,7 +2,7 @@
   <div id="ChatBoard">
     <div class="btn-area">
       <router-link to="/">
-        ＜ 戻る
+        ＜ タスク画面
       </router-link>
     </div>
     <v-list three-line>
@@ -17,10 +17,14 @@
 
           <v-list-item-content>
             <v-list-item-subtitle class="text--primary subheading">
-              {{comment.content}}
+              宛先：{{comment.content1}}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle class="text--primary subheading">
+              内容：{{comment.content2}}
             </v-list-item-subtitle>
             <v-list-item-subtitle class="timestamps">
               {{comment.createdAt.toDate().toLocaleString()}}
+              <v-icon @click="deleteComment(comment.id)">🗑</v-icon>
             </v-list-item-subtitle>
           </v-list-item-content>
 
@@ -48,6 +52,14 @@
 
       }
     },
+    methods: {
+      deleteComment(id) {
+        if (!confirm('コメントを削除してよろしいですか？')) {
+           return
+       }
+       db.collection('comments').doc(id).delete()
+      },
+    },
   }
 </script>
 
@@ -61,12 +73,7 @@ a {
   font-size: 20px;
   font-weight: bold;
   height: 20px;
-  color: #2A005F;
   text-decoration: none;
   cursor: pointer;
-}
-
-.text--primary, .timestamps {
-  padding-left: 20px;
 }
 </style>
