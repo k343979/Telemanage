@@ -8,11 +8,6 @@ export default new Vuex.Store({
     tasks: [],
     sequence: 1
   },
-  getters: {
-    getTaskById: state => id => {
-    return state.tasks.find(task => task.id === id);
-    }
-  },
   mutations: {
     setTasks(state, tasks) {
       state.tasks = tasks;
@@ -31,14 +26,29 @@ export default new Vuex.Store({
       state.sequence++;
       console.log(state);
     },
-    update(state, { id, name, taskStatus, content }) {
-      const index = state.tasks.findIndex(task => task.id === id);
-      if (index >= 0) {
-        state.tasks[index].name = name;
-        state.tasks[index].taskStatus = taskStatus;
-        state.tasks[index].content = content;
-      }
-      console.log(state);
+    submit(state, id) {
+      const filtered = state.tasks.filter(task => {
+        return task.id === id
+      })
+      filtered.forEach(task => {
+        task.taskStatus = "done"
+      })
+    },
+    complete(state, id) {
+      const filtered = state.tasks.filter(task => {
+        return task.id === id
+      })
+      filtered.forEach(task => {
+        task.taskStatus = "complete"
+      })
+    },
+    unsubmit(state, id) {
+      const filtered = state.tasks.filter(task => {
+        return task.id === id
+      })
+      filtered.forEach(task => {
+        task.taskStatus = "undone"
+      })
     },
     delete(state, id) {
       const index = state.tasks.findIndex(task => task.id === id);
@@ -76,8 +86,14 @@ export default new Vuex.Store({
     addTask({ commit }, task) {
       commit("add", task);
     },
-    updateTask({ commit }, task) {
-      commit("update", task);
+    submitTask({ commit }, id) {
+      commit("submit", id);
+    },
+    completeTask({ commit }, id) {
+      commit("complete", id);
+    },
+    unsubmitTask({ commit }, id) {
+      commit("unsubmit", id);
     },
     deleteTask({ commit }, id) {
       commit("delete", id);

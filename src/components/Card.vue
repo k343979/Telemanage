@@ -8,35 +8,8 @@
         <ul v-for="task in lists1" :key="task.id">
           <li>宛先：{{ task.name }}</li>
           <li>内容：{{ task.content }}</li>
-          <button @click="openModal">編集</button>
+          <button @click="submitTask(task.id)">提出</button>
           <button @click="deleteTask(task.id)">削除</button>
-          <div class="overlay" v-if="show">
-            <div class="content">
-              <h4>編集画面</h4>
-              <div class="Modal">
-                <div class="item">
-                  <label class="label" for="name">宛先</label>
-                  <input type="text" name="hisname" v-model="editName">
-                </div>
-                <div class="item">
-                  <p class="label">タスク状況</p>
-                  <div class="inputs">
-                    <input id="undone" type="radio" name="condition" v-model="editTaskStatus" value="undone"><label for="undone">未提出</label>
-                    <input id="done" type="radio" name="condition" v-model="editTaskStatus" value="done"><label for="done">提出</label>
-                    <input id="complete" type="radio" name="condition" v-model="editTaskStatus" value="complete"><label for="complete">完了</label>
-                  </div>
-                </div>
-                <div class="item">
-                  <label class="label" for="comment">タスク内容</label>
-                  <textarea class="inputs" name="comment" v-model="editContent"></textarea>
-                </div>
-                <div class="btn-area" @click="closeModal">
-                  <button @click="editTask" value="更新">更新</button>
-                </div>
-              </div>
-              <button @click="closeModal">キャンセル</button>
-            </div>
-          </div>
         </ul>
       </div>
     </div>
@@ -48,35 +21,8 @@
         <ul v-for="task in lists2" :key="task.id">
           <li>宛先：{{ task.name }}</li>
           <li>内容：{{ task.content }}</li>
-          <button @click="openModal">編集</button>
-          <button @click="deleteTask(task.id)">削除</button>
-          <div class="overlay" v-if="show">
-            <div class="content">
-              <h4>編集画面</h4>
-              <div class="Modal">
-                <div class="item">
-                  <label class="label" for="name">宛先</label>
-                  <input type="text" name="hisname" v-model="name">
-                </div>
-                <div class="item">
-                  <p class="label">タスク状況</p>
-                  <div class="inputs">
-                    <input id="undone" type="radio" name="condition" v-model="taskStatus" value="undone"><label for="undone">未提出</label>
-                    <input id="done" type="radio" name="condition" v-model="taskStatus" value="done"><label for="done">提出</label>
-                    <input id="complete" type="radio" name="condition" v-model="taskStatus" value="complete"><label for="complete">完了</label>
-                  </div>
-                </div>
-                <div class="item">
-                  <label class="label" for="comment">タスク内容</label>
-                  <textarea class="inputs" name="comment" v-model="content"></textarea>
-                </div>
-                <div class="btn-area" @click="closeModal">
-                  <button @click="editTask" value="更新">更新</button>
-                </div>
-              </div>
-              <button @click="closeModal">キャンセル</button>
-            </div>
-          </div>
+          <button @click="completeTask(task.id)">完了</button>
+          <button @click="unsubmitTask(task.id)">再提出</button>
         </ul>
       </div>
     </div>
@@ -88,35 +34,7 @@
         <ul v-for="task in lists3" :key="task.id">
           <li>宛先：{{ task.name }}</li>
           <li>内容：{{ task.content }}</li>
-          <button @click="openModal">編集</button>
           <button @click="deleteTask(task.id)">削除</button>
-          <div class="overlay" v-if="show">
-            <div class="content">
-              <h4>編集画面</h4>
-              <div class="Modal">
-                <div class="item">
-                  <label class="label" for="name">宛先</label>
-                  <input type="text" name="hisname" v-model="name">
-                </div>
-                <div class="item">
-                  <p class="label">タスク状況</p>
-                  <div class="inputs">
-                    <input id="undone" type="radio" name="condition" v-model="taskStatus" value="undone"><label for="undone">未提出</label>
-                    <input id="done" type="radio" name="condition" v-model="taskStatus" value="done"><label for="done">提出</label>
-                    <input id="complete" type="radio" name="condition" v-model="taskStatus" value="complete"><label for="complete">完了</label>
-                  </div>
-                </div>
-                <div class="item">
-                  <label class="label" for="comment">タスク内容</label>
-                  <textarea class="inputs" name="comment" v-model="content"></textarea>
-                </div>
-                <div class="btn-area" @click="closeModal">
-                  <button @click="editTask" value="更新">更新</button>
-                </div>
-              </div>
-              <button @click="closeModal">キャンセル</button>
-            </div>
-          </div>
         </ul>
       </div>
     </div>
@@ -128,34 +46,25 @@ import store from '../store/index';
 export default {
   created() {
     this.$store.dispatch("readTasks");
-    const task = this.$store.getters.getTaskById(Number(this.$store.state.tasks.id));
-    if (task === undefined) {
-      return;
-    }
-    this.name = task.name;
-    this.taskStatus = task.taskStatus;
-    this.content = task.content;
   },
   data() {
     return {
       show: false,
-      name: "",
-      taskStatus: "",
-      content: ""
     };
   },
   methods: {
     openModal() {
-      this.show= true
+      this.show = true
+      return this.$store.getters.getTaskById
     },
-    editTask() {
-      let task = {
-        id: this.$store.state.tasks.id,
-        name: this.name,
-        taskStatus: this.taskStatus,
-        content: this.content
-      };
-      this.$store.dispatch("updateTask", task);
+    submitTask(id) {
+      this.$store.dispatch("submitTask", id);
+    },
+    completeTask(id) {
+      this.$store.dispatch("completeTask", id);
+    },
+    unsubmitTask(id) {
+      this.$store.dispatch("unsubmitTask", id);
     },
     deleteTask(id) {
       this.$store.dispatch("deleteTask", id);
@@ -165,30 +74,6 @@ export default {
     },
   },
   computed: {
-    editName: {
-      get() {
-        return this.name;
-      },
-      set(value) {
-        this.$$emit("update:name", value);
-      }
-    },
-    editTaskStatus: {
-      get() {
-        return this.taskStatus;
-      },
-      set(value) {
-        this.$$emit("update:taskStatus", value);
-      }
-    },
-    editContent: {
-      get() {
-        return this.content;
-      },
-      set(value) {
-        this.editTask("update:content", value);
-      }
-    },
     lists1() {
       return this.$store.state.tasks.filter(function (tasks) {
         return tasks.taskStatus === "undone"
