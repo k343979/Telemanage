@@ -1,4 +1,4 @@
-# api-pj2
+# Telemanage
 
 ## Project setup
 ```
